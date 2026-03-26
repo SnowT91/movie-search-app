@@ -3,7 +3,7 @@ const BASE_URL = `https://www.omdbapi.com/?apikey=${API_KEY}`;
 
 const searchForm = document.getElementById('search-form');
 const searchInput = document.getElementById('search-input');
-const movieContainer = document.getElementById('movie-container');
+const movieContainer = document.getElementById('movies-container');
 const message = document.getElementById('message');
 
 function showMessage(text, isError = false) {
