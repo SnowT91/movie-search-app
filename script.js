@@ -82,3 +82,5 @@ searchForm.addEventListener('submit', (event) => {
     fetchMovies(searchTerm);
     searchInput.value = '';
 });
+
+showMessage('Search for your favorite movies to get started.');
