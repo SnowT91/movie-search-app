@@ -32,3 +32,7 @@ This project was created to practice working with APIs, asynchronous JavaScript,
 ## Live Demo
 
 [Open Movie Search App](https://movie-search-app-archyteam.netlify.app)
+
+## Screenshot
+
+![Movie Search App Screenshot](images/screenshot.png)
