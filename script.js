@@ -3,7 +3,9 @@ const BASE_URL = `https://www.omdbapi.com/?apikey=${API_KEY}`;
 
 const searchForm = document.getElementById('search-form');
 const searchInput = document.getElementById('search-input');
-const movieContainer = document.getElementById('movies-container');
+const searchButton = document.getElementById('search-button');
+const clearButton = document.getElementById('clear-button');
+const moviesContainer = document.getElementById('movies-container');
 const message = document.getElementById('message');
 
 function showMessage(text, isError = false) {
@@ -15,23 +17,29 @@ function clearMessage() {
     message.textContent = '';
 }
 
+function setLoading(isLoading) {
+    searchButton.disabled = isLoading;
+    clearButton.disabled = isLoading;
+    searchButton.textContent = isLoading ? 'Searching...' : 'Search';
+}
+
 function showLoader() {
-    movieContainer.innerHTML = `<div class="loader">Loading movies...</div>`;
+    moviesContainer.innerHTML = `<div class="loader">Loading movies...</div>`;
 }
 
 function clearMovies() {
-    movieContainer.innerHTML = '';
+    moviesContainer.innerHTML = '';
 }
 
 function createMovieCard(movie) {
-    const poster = 
+    const posterHTML = 
         movie.Poster !== 'N/A' 
-            ? movie.Poster 
-            : 'https://via.placeholder.com/300x450?text=No+Image';
+            ? `<img class="movie-poster" src="${movie.Poster}" alt="${movie.Title}" />`
+            : `<div class="no-poster">No Image</div>`;
 
     return `
         <div class="movie-card">
-            <img class="movie-poster" src="${poster}" alt="${movie.Title}" />
+            ${posterHTML}
             <div class="movie-info">
                 <h3 class="movie-title">${movie.Title}</h3>
                 <div class="movie-meta">
@@ -44,13 +52,21 @@ function createMovieCard(movie) {
 }
 
 function renderMovies(movies) {
-    movieContainer.innerHTML = movies.map(createMovieCard).join('');
+    moviesContainer.innerHTML = movies.map(createMovieCard).join('');
+}
+
+function resetAppState() {
+    searchInput.value = '';
+    clearMovies();
+    clearMessage();
+    showMessage('Search for your favorite movies to get started.');
 }
 
 async function fetchMovies(searchTerm) {
     try {
-        showLoader();
+        setLoading(true);
         clearMessage();
+        showLoader();
 
         const response = await fetch(`${BASE_URL}&s=${encodeURIComponent(searchTerm)}`);
         const data = await response.json();
@@ -62,9 +78,12 @@ async function fetchMovies(searchTerm) {
         }
 
         renderMovies(data.Search);
+        showMessage(`Found ${data.Search.length} result(s) for "${searchTerm}".`);
     } catch (error) {
         clearMovies();
         showMessage('Something went wrong. Please try again.', true);
+    } finally {
+        setLoading(false);
     }
 }
 
@@ -80,7 +99,8 @@ searchForm.addEventListener('submit', (event) => {
     }
 
     fetchMovies(searchTerm);
-    searchInput.value = '';
 });
+
+clearButton.addEventListener('click', resetAppState);
 
 showMessage('Search for your favorite movies to get started.');
