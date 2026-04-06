@@ -36,3 +36,12 @@ This project was created to practice working with APIs, asynchronous JavaScript,
 ## Screenshot
 
 ![Movie Search App Screenshot](images/screenshot.png)
+
+## Updates
+
+### V1.1
+
+- Add clear results button to movie search app
+- Improve loading state and disable search button during requests
+- Replace external placeholder with local no-image fallback
+- Polish messages and UI states for better UX
